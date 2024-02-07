@@ -1,3 +1,4 @@
+import 'package:consumo_servico_avancado/Post.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -14,49 +15,48 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  Future<Map> _recuperarPreco() async {
-    String url = "https://blockchain.info/ticker";
+  String _urlBase = "https://jsonplaceholder.typicode.com";
 
-    http.Response response = await http.get(Uri.parse(url));
-    return json.decode( response. body );
+
+  Future<List<Post>> _recuperarPostagens(){
+
 
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map>(
-      future: _recuperarPreco(),
-      builder: (context, snapshot){
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Consumo de serviços avançados"),
+      ),
+      body: FutureBuilder<List<Post>>(
+        future: _recuperarPostagens(),
+        builder: (context, snapshot){
 
+          //Verificar se deu certo ou não.
+          switch( snapshot.connectionState ){
+          //Que defini o estado da conexão e null
+            case ConnectionState.none :
+            //Que aguarda a comunicação com API
+            case ConnectionState.waiting :
+              print("Conexao waiting");
+              break;
+          //Sem necessidade
+            case ConnectionState.active :
+            //Apenas que carregue a conexão
+            case ConnectionState.done :
+              print("Conexao done");
+              if ( snapshot.hasError ){
+              }else {
 
-        String resultado;
-
-        //Verificar se deu certo ou não.
-        switch( snapshot.connectionState ){
-             //Que defini o estado da conexão e null
-          case ConnectionState.none :
-             //Que aguarda a comunicação com API
-          case ConnectionState.waiting :
-            print("Conexao waiting");
-            resultado = "Carregando...";
-            break;
-             //Sem necessidade
-          case ConnectionState.active :
-             //Sem necessidade
-          case ConnectionState.done :
-          print("Conexao done");
-          if ( snapshot.hasError ){
-            resultado = "Erro ao carregar os dados";
-          }else {
-            double valor = snapshot.data! ["BRL"]["buy"];
-            resultado = "Preço do bitcoin: ${valor.toString()}";
-          };
-          break;
-        }
-        return Center(
-          child: Text( resultado )
-        );
-      },
+              };
+              break;
+          }
+          return Center(
+              child: Text( resultado )
+          );
+        },
+      ),
     );
   }
 }
