@@ -1,4 +1,5 @@
-class Post {
+class Post{
+
   int _userId;
   int _id;
   String _title;
@@ -29,4 +30,6 @@ class Post {
   set userId(int value) {
     _userId = value;
   }
+
+
 }
